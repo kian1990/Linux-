@@ -1,0 +1,21 @@
+1.Linux下挂载Windows共享目录
+  yum install cifs-utils
+  mount.cifs //192.168.1.100/share /mnt -o user=username,pass=password
+2.查看目录文件数目,包括子文件夹
+  ls /var/log -lR | grep "^-" | wc -l
+  find /var/log -type f | wc -l
+3.统计文件中每个IP访问数最多的5个
+  cat access.log | awk '{print $1}' | sort | uniq -c | sort -rn | head -5
+4.查看当前系统每个IP的连接数
+  yum install net-tools
+  netstat -n | awk '/^tcp/ {print $5}'| awk -F: '{print $1}' | sort | uniq -c | sort -rn
+5.用tcpdump嗅探80端口访问数最多的5个
+  tcpdump -i eth0 -tnn dst port 80 -c 10 | awk -F"." '{print $1"."$2"."$3"."$4}' | sort | uniq -c | sort -rn | head -5
+6.生成32位随机密码
+  cat /dev/urandom | head -1 | md5sum | head -c 32 >> pass
+7.查看二进制文件的内容
+  hexdump -C /usr/bin/ls
+8.镜像文件写入磁盘
+  dd bs=4M if=/home/linux.iso of=/dev/sdb status=progress && sync
+9.保存当前磁盘分区的分区表
+  dd if=/dev/sda of=./mbr.txt bs=1 count=512
